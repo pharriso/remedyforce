@@ -1,0 +1,19 @@
+---
+
+- name: create remedyforce incident
+  hosts: localhost
+  tasks:
+  - name: create incident
+    uri:
+      url: "{{ remedy_url }}/services/apexrest/BMCServiceDesk/1.0/Incident"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: Bearer {{ remedy_token }}
+      body_format: json
+      body: "{{ lookup('template','create_incident.json.j2') }}"
+    register: incident
+
+  - name: print incident number
+    debug:
+      msg: Incident number is {{ incident.json.Result.Number }}
